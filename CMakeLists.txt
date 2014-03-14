@@ -4,7 +4,10 @@ project(argos3d_p100)
 ## check required modules
 SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/external/cmake_modules")
 find_package(PMD REQUIRED)
-
+find_library(PMD_LIBRARY pmdaccess2 HINTS ${PMD_PLUGIN_DIR})
+if(NOT PMD_LIBRARY)
+    message(FATAL_ERROR "Could not find pmdaccess2 library in ${PMD_PLUGIN_DIR}")
+endif()
 ## preprocessor definitions
 add_definitions(-DPMD_PLUGIN_DIR="${PMD_PLUGIN_DIR}/")
 
@@ -58,7 +61,7 @@ add_executable(argos3d_p100_node src/argos3d_p100_node.cpp)
 
 add_dependencies(argos3d_p100_node ${PROJECT_NAME}_gencfg) 
 
-target_link_libraries(argos3d_p100_node pmd_sdk pmdaccess2 ${catkin_LIBRARIES})
+target_link_libraries(argos3d_p100_node pmd_sdk ${PMD_LIBRARY} ${catkin_LIBRARIES})
 
 #############
 ## Install ##
